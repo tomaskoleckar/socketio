@@ -7,21 +7,22 @@ const {username, room} = Qs.parse(location.search, {
   ignoreQueryPrefix: true
 });
 
-
 leaveButton.addEventListener("click", function(){
     window.location = '../index.html';
 });
 
+
 console.log(username, room);
 const socket = io();
+
+outputRoomName(room);
+
 
 socket.emit("joinRoom", {username, room});
 
 
-outputRoomName(room);
-
 if(room == "Admin-room"){
-    let userPassword = prompt("Please enter a password", "password");
+    let userPassword = prompt("Please enter a room password", "password");
     if(userPassword != "admin"){
         window.location = '../index.html';
     }
@@ -45,8 +46,12 @@ chatForm.addEventListener("submit", (e)=> {
     e.target.elements.msg.value = '';
     e.target.elements.msg.focus();
 });
+console.log(users);
+console.log(users);
+console.log(users);
+function updateUsers(){
 
-
+}
 
 function outputMessage(message){
     const div = document.createElement("div");
@@ -58,14 +63,12 @@ function outputMessage(message){
     document.querySelector(".chat-messages").appendChild(div);
 }
 
+socket.on('roomUsers', ({ room, users }) => {
+    console.log(users);
+    outputUsers(users);
+  });
+
+
 function outputRoomName(room) {
     roomName.innerText = room;
-  }
-  function outputUsers(users) {
-    userList.innerHTML = "";
-    users.forEach((user) => {
-      const li = document.createElement("li");
-      li.innerText = user.username;
-      userList.appendChild(li);
-    });
   }
